@@ -8,9 +8,9 @@ This repository will explain how to use the PyTaskExec files through an example 
 The purpose of PyTaskExec is to run an executable with different variables.
 In MaSQE we specify the parameters using XML files and the compiled C++ executable can use those variables using the XML parser prof. Anderson wrote.
 So PyTaskExec works in a way to facilitate this for a sweep over parameters by creating a bunch of .xml files based of a template.
-These .xml files are created in separate folders so that the executable can be run in each folder with that folder's xml file.
-Then, the resulting output of running the executable with a particular XML file is output in that folder.
-Finally, the output data in each folder is collected into a database (.db file).
+These .xml files are created in separate directories so that the executable can be run in each directory with that directory's xml file.
+Then, the resulting output of running the executable with a particular XML file is output in that directory.
+Finally, the output data in each directory is collected into a database (.db file).
 
 ## Step 1. Create XML files used for the parameters you want to sweep
 
@@ -82,11 +82,11 @@ This way is
 Capture_Data_0 (Check Cluster later)
 ```
 ### Notes on this step:
-First, note that the command that I execute in each folder:
+First, note that the command that I execute in each directory:
 ```
 <executableCommand   value = "python3 u/home/d/dwkanaar/MaSQE/RunFiles/PyExecDK.py"/>
 ```
-is a Python command that uses the .xml in each folder.
+is a Python command that uses the .xml in each directory.
 However, if you can just run the executable you could do something like:
 ```
 <executableCommand   value = "u/home/d/dwkanaar/MaSQE/Release/RunSingleParticle -f Sweep.xml"/>
@@ -104,32 +104,47 @@ have to match the names you gave the .xml and .tpl files you made at the beginni
 
 ## Part 2: Create the database file
 
-The next step is to create the .db file that PyTaskExec will later use to create the ./TaskData/SweepData1 folders housing the xml files.
+The next step is to create the .db file that PyTaskExec will later use to create the ./TaskData/SweepData1 directories housing the xml files.
 The command is
 ```
 python3 /u/home/d/dwkanaar/MaSQE/PyComponents/PyTaskExec/TaskDbBuilder.py -x SetupSweep.xml -t SetupSweep -d SweepData.db
 ```
-where you have to replace the path with the path to your PyComponents folder. 
+where you have to replace the path with the path to your PyComponents directory. 
 
 -x file uses SetupSweep.xml as the file that the template is based on as the output
 -d SweepData.db makes the database you output called SweepData.db
 
-After this step you
+## PArt 3: Create the TaskData directory and XML files per directory
 
-Then  run
+Next PyTaskExec creates the individual directory for the XML files within a new directory, ./TaskData, where the Python file is run. 
+The command to run this file is:
+```
+python3 ../PyComponents/PyTaskExec/CreateTaskDataFiles.py -x SetupSweep.xml -d SweepData.db
+```
+where -d SweepData.db is the database we just created and -x SetupWeep.xml is the same xml file used to create the database.
 
 
-python3 ../PyComponents/PyTaskExec/CreateTaskDataFiles.py -x SetupDisorderSweep.xml -d SetupDisorderSweep.db
+## Part 4: Run the files as one job/command:
 
-To create the TaskData folders with the xml files in them with the parameters you want to run
-
-Then to run the files as one job/command:
-
+The following command will run the command you instructed to be run in each of the directories:
+```
 python3 ./PyComponents/PyTaskExec/ExecRun -d SetupDisorderSweep.db -t SetupDisorderSweep -n 4
+```
+The option -n 4 tells the code to run on 4 threads at once. This means it will start the first 4 XML input and then run the next ones as they complete, having 4 executables running at once.
+If you are using an interactive node on the cluster be careful to make sure your code can run with that much memory. 
 
- Or to run it as a job array if it’s a very parallel job.
+This command can be used in a job.sh file to run it on the cluster, however, this will only be a singular job.
+It might be faster to use a jobarray which will be covered in Part 5/6?.
 
-Then to capture the data
-You need the db in the file and run 
+## Part 5: Capture the data
+
+The data is then captured from the output files from the jobs using the CaptureOutput.py file like:
+```
 python3 /u/home/d/dwkanaar/MaSQE/PyComponents/PyTaskExec/CaptureOutput.py -d SweepData.db -x SetupSweep.xml -a joblog.5039152
+```
+Where the SweepData.db file has to be in the TaskData Direcotry where you call this command or call it with ../SweepData.db.
+-a joblog.5039152 has to be replaced with the name of the job you had which can be easily check by going into the folder and looking at the name of the job. 
+
+## Part 6: Using Job array instead of single job
+
 
