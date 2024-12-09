@@ -1,0 +1,5 @@
+<?xml version="1.0" standalone="no"?>
+<Run_Parameters>
+<runParameter1 value = "$val1" type = "double" />
+<runParameter2 value = "$val2" type = "double" />  
+</Run_Parameters>
