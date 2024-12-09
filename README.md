@@ -15,7 +15,7 @@ Finally, the output data in each directory is collected into a database (.db fil
 ## Step 1. Create XML files used for the parameters you want to sweep
 
 The first step is to make a template and example XML file.
-The example .xml file, Sweep.xml, that I used to run over parameters looked like this:
+The example .xml file, [Sweep.xml](Sweep.xml), that I used to run over parameters looked like this:
 ```
 <?xml version="1.0" standalone="no"?>
 <Run_Parameters>
