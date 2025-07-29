@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TaskBuilderData>
+
+	<taskRanges>
+		<BasisSize>
+			<min> 10 </min>
+			<max> 34 </max>
+			<increment> 1</increment>
+		</BasisSize>
+	</taskRanges>
+
+
+	<!-- python3 /u/home/d/dwkanaar/MaSQE/Testing/PyComponents/PyTaskExec/TaskDbBuilder.py -x BasisSweep.xml -t BasisSweep -d BasisSweep.db  -->
+	<!-- python3 /u/home/d/dwkanaar/MaSQE/Testing/PyComponents/PyTaskExec/CreateTaskDataFiles.py -t BasisSweep -d BasisSweep.db  -->
+	<!-- python3 /u/home/d/dwkanaar/MaSQE/Testing/PyComponents/PyTaskExec/ExecRun.py -d BasisSweep.db -t BasisSweep -n 4 -->
+	<!-- python3 /u/home/d/dwkanaar/MaSQE/Testing/PyComponents/PyTaskExec/CaptureOutput.py -d BasisSweep.db -x BasisSweep.xml -a joblog.10001669 -o TaskData-->
+	
+	<jobData>
+		<executableCommand   value = "python3 /u/home/d/dwkanaar/MaSQE/Testing/Parameters/SingleParticle_TB/PyExecDK.py"/>
+		<runFileName         value = "BasisSweep.xml" />
+		<runFileTemplate     value = "BasisSweep.tpl"  type = "file" />
+		<outputHandlerScript value = "DefaultOutputHandler.py" />
+	</jobData>
+
+
+	<runParameters>
+		<BasisSize     value =   "0"     type = "int" />
+	</runParameters>
+
+
+	<outputData>
+		<UUDDD_0      type = "double" />
+		<UUDDD_1      type = "double" />
+		<UUDDD_2      type = "double" />
+		<UUDDD_3      type = "double" />
+		<UUDDD_4      type = "double" />
+		<UUDDD_5      type = "double" />
+	</outputData>
+</TaskBuilderData>
